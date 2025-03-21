@@ -52,8 +52,6 @@ public sealed class NetworkConnection : IDisposable
     /// </summary>
     public NetworkConnection() : this(new TcpClient())
     {
-        _tcpClient.GetStream().Close();
-        _tcpClient.Close();
     }
 
     /// <summary>
@@ -64,7 +62,6 @@ public sealed class NetworkConnection : IDisposable
         get { return _tcpClient.Connected; }
     }
 
-
     /// <summary>
     ///     Try to connect to the given host:port. 
     /// </summary>
@@ -74,7 +71,6 @@ public sealed class NetworkConnection : IDisposable
     {
         _tcpClient.Connect(host, port);
     }
-
 
     /// <summary>
     ///     Send a message to the remote server. If the <paramref name="message"/> contains new lines, these will be treated on the receiving side as multiple messages.
@@ -88,10 +84,8 @@ public sealed class NetworkConnection : IDisposable
     /// <param name="message"> The string of characters to send. </param>
     public void Send(string message)
     {
-        _writer = new StreamWriter(_tcpClient.GetStream(), Encoding.UTF8) { AutoFlush = true } ;
         _writer.WriteLine(message);
     }
-
 
     /// <summary>
     ///     Read a message from the remote side of the connection. The message will contain all characters up to the first new line. See <see cref="Send"/>.
@@ -102,7 +96,6 @@ public sealed class NetworkConnection : IDisposable
     /// <returns> The contents of the message. </returns>
     public string ReadLine()
     {
-        _reader = new StreamReader(_tcpClient.GetStream(), Encoding.UTF8);
         return _reader.ReadLine();
     }
 

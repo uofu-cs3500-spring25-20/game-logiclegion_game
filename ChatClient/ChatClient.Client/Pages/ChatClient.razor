@@ -23,7 +23,6 @@
         }
     </div>
 
-
     @{
         bool disconnected = !network.IsConnected;
         string grayedOut = disconnected ? "grayedOut" : string.Empty;
@@ -48,26 +47,25 @@
     </div>
 </div>
 
-
 @code
 {
     /// <summary>
-    /// Default server name
+    ///     Default server name
     /// </summary>
     private string ServerNameOrAddress = "localhost";
 
     /// <summary>
-    /// Default server port
+    ///     Default server port
     /// </summary>
     private int ServerPort = 11000;
 
     /// <summary>
-    /// The NetworkConnection object representing a connection with the server
+    ///     The NetworkConnection object representing a connection with the server
     /// </summary>
     private NetworkConnection network = null!;
 
     /// <summary>
-    /// The string shown in the message display area, representing all messages seen
+    ///     The string shown in the message display area, representing all messages seen
     /// </summary>
     private string MessageDisplayTextAreaData
     {
@@ -78,13 +76,12 @@
     }
 
     /// <summary>
-    /// All of the messages seen by the server
+    ///     All of the messages seen by the server
     /// </summary>
     private List<string> AllMessages = new();
 
-
     /// <summary>
-    /// Disconnect the network object from the server.
+    ///     Disconnect the network object from the server.
     /// </summary>
     private void DisconnectFromServer()
     {
@@ -93,8 +90,7 @@
 
     /// <summary>
     /// Handler for the connect button
-    /// Attempt to connect to the server, then start an asynchronous loop
-    /// to receive and display messages.
+    /// Attempt to connect to the server, then start an asynchronous loop to receive and display messages.
     /// </summary>
     private void ConnectToServer()
     {
@@ -102,8 +98,7 @@
         {
             network.Connect( ServerNameOrAddress, ServerPort );
 
-            // Communicating with the server needs to be asynchronous so that the UI thread 
-            // can continue drawing.
+            // Communicating with the server needs to be asynchronous so that the UI thread can continue drawing.
             new Thread( () =>
             {
                 while ( network.IsConnected )
@@ -115,8 +110,7 @@
                         message = $"{DateTime.Now:HH:mm tt} - {message}";
                         AllMessages.Insert( 0, message );
 
-                        // Since we are changing the UI from another thread, we need to 
-                        // use the dispatcher for StateHasChanged
+                        // Since we are changing the UI from another thread, we need to use the dispatcher for StateHasChanged
                         InvokeAsync( () => StateHasChanged() );
                     }
                     catch
@@ -154,5 +148,4 @@
         base.OnInitialized();
         network = new();
     }
-
 }
