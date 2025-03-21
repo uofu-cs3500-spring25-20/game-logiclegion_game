@@ -7,7 +7,7 @@ using System.Text;
 namespace CS3500.Networking;
 
 /// <summary>
-///   Wraps the StreamReader/Writer/TcpClient together so we don't have to keep creating all three for network actions.
+///     Wraps the StreamReader/Writer/TcpClient together so we don't have to keep creating all three for network actions.
 /// </summary>
 public sealed class NetworkConnection : IDisposable
 {
@@ -77,8 +77,7 @@ public sealed class NetworkConnection : IDisposable
 
 
     /// <summary>
-    ///     Send a message to the remote server.  If the <paramref name="message"/> contains new lines, these will be treated on the receiving side
-    ///     as multiple messages.
+    ///     Send a message to the remote server. If the <paramref name="message"/> contains new lines, these will be treated on the receiving side as multiple messages.
     ///     <para>
     ///         This method should attach a newline to the end of the <paramref name="message"/> (by using WriteLine).
     ///     </para>
@@ -89,7 +88,8 @@ public sealed class NetworkConnection : IDisposable
     /// <param name="message"> The string of characters to send. </param>
     public void Send(string message)
     {
-        // TODO: Implement this
+        _writer = new StreamWriter(_tcpClient.GetStream(), Encoding.UTF8) { AutoFlush = true } ;
+        _writer.WriteLine(message);
     }
 
 
@@ -102,7 +102,8 @@ public sealed class NetworkConnection : IDisposable
     /// <returns> The contents of the message. </returns>
     public string ReadLine()
     {
-        // TODO: implement this
+        _reader = new StreamReader(_tcpClient.GetStream(), Encoding.UTF8);
+        return _reader.ReadLine();
     }
 
     /// <summary>
@@ -110,7 +111,11 @@ public sealed class NetworkConnection : IDisposable
     /// </summary>
     public void Disconnect()
     {
-        //TODO: implement this
+        if (_tcpClient.Connected)
+        {
+            _tcpClient.GetStream().Close();
+            _tcpClient.Close();
+        }
     }
 
     /// <summary>
