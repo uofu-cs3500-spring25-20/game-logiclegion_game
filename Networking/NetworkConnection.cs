@@ -47,12 +47,13 @@ public sealed class NetworkConnection : IDisposable
     /// <summary>
     ///     Initializes a new instance of the <see cref="NetworkConnection"/> class.
     ///     <para>
-    ///         Create a network connection object.  The tcpClient will be unconnected at the start.
+    ///         Create a network connection object. The tcpClient will be unconnected at the start.
     ///     </para>
     /// </summary>
-    public NetworkConnection()
-        : this(new TcpClient())
+    public NetworkConnection() : this(new TcpClient())
     {
+        _tcpClient.GetStream().Close();
+        _tcpClient.Close();
     }
 
     /// <summary>
@@ -60,10 +61,7 @@ public sealed class NetworkConnection : IDisposable
     /// </summary>
     public bool IsConnected
     {
-        get
-        {
-            // TODO: implement this
-        }
+        get { return _tcpClient.Connected; }
     }
 
 
@@ -74,7 +72,7 @@ public sealed class NetworkConnection : IDisposable
     /// <param name="port"> The port, e.g., 11000. </param>
     public void Connect(string host, int port)
     {
-        // TODO: implement this
+        _tcpClient.Connect(host, port);
     }
 
 
